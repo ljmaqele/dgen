@@ -67,6 +67,7 @@ def main(mode = None, resume_year = None, endyear = None, ReEDS_inputs = None):
         dup_n = 1
         out_subfolders = {'wind': [], 'solar': []}
         for i, scenario_file in enumerate(model_settings.input_scenarios):
+        
             logger.info('============================================')
             logger.info('============================================')
             logger.info("Running Scenario {i} of {n}".format(i=i + 1,n=len(model_settings.input_scenarios)))
@@ -223,7 +224,7 @@ def main(mode = None, resume_year = None, endyear = None, ReEDS_inputs = None):
                     solar_agents.on_frame(agent_mutation.elec.apply_state_incentives, [state_incentives, year, model_settings.start_year, state_capacity_by_year])
                     
                     # Calculate System Financial Performance
-                    solar_agents.chunk_on_row(financial_functions.calc_system_size_and_performance, sectors=scenario_settings.sectors, cores=cores, rate_switch_table=rate_switch_table)
+                    solar_agents.chunk_on_row(financial_functions.calc_system_size_and_performance, sectors=scenario_settings.sectors,  cores=cores, rate_switch_table=rate_switch_table)
 
                     # Calculate the financial performance of the S+S systems
                     #solar_agents.on_frame(financial_functions.calc_financial_performance)

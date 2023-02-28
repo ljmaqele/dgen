@@ -108,14 +108,14 @@ def create_scenario_results_folder(input_scenario, scen_name, scenario_names, ou
     out_scen_path = os.path.join(out_dir, scen_name)
     os.makedirs(out_scen_path)
     # copy the input scenario spreadsheet
-    if input_scenario is not None:
-        shutil.copy(input_scenario, out_scen_path)
+    # if input_scenario is not None:
+    #     shutil.copy(input_scenario, out_scen_path)
 
     return out_scen_path, scenario_names, dup_n
 
 
 @decorators.fn_timer(logger=logger, tab_level=1, prefix='')
-def create_output_schema(pg_conn_string, role, suffix, scenario_list, source_schema='diffusion_template', include_data=True):
+def create_output_schema(pg_conn_string, role, suffix, scenario_list, index, source_schema='diffusion_template', include_data=True):
     """
     Creates output schema that will be dropped into the database
     
@@ -127,6 +127,10 @@ def create_output_schema(pg_conn_string, role, suffix, scenario_list, source_sch
         Owner of schema 
     suffix : 'string'
         String to mark the time that model is kicked off. Added to end of schema to act as a unique indentifier
+    scenario_list: 'list of dictionaries'
+        List of scenario inputs
+    index: 'integer'
+        Index of the target scenario input
     source_schema : 'SQL schema'
         Schema to be used as template for the output schema
     include_data : 'bool'
@@ -153,8 +157,9 @@ def create_output_schema(pg_conn_string, role, suffix, scenario_list, source_sch
     if check['count'][0] != 1:
         msg = "Specified source_schema ({source_schema}) does not exist.".format(**inputs)
         raise ValueError(msg)
-
-    scen_suffix = os.path.split(scenario_list[0])[1].split('_')[2].rstrip('.xlsm')
+    #print(scenario_list)
+    #scen_suffix = os.path.split(scenario_list[0])[1].split('_')[2].rstrip('.xlsm')
+    scen_suffix = scenario_list[index]['scenario_name']
 
     dest_schema = 'diffusion_results_{}'.format(suffix+suffix_microsecond+'_'+scen_suffix)
     inputs['dest_schema'] = dest_schema
